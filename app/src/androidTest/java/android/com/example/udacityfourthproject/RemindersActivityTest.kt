@@ -112,7 +112,7 @@ class RemindersActivityTest :
     }
 
     @Test
-    fun addNewReminder_saveReminder() {
+    fun addNewReminder_saveReminder_missingLocation() {
         // GIVEN - on the home screen
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)

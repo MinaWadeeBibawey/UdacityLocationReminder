@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import org.koin.android.ext.android.inject
 
+
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
     //Use Koin to get the view model of the SaveReminder
@@ -127,7 +128,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
                 Log.e(TAG, "Style parsing failed.")
             }
         } catch (e: Resources.NotFoundException) {
-            Log.e(TAG, "Can't find style. Error: ", e)
+            Log.e(TAG, "Can't find style. Error: ${e.message}")
         }
     }
 
@@ -145,20 +146,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             val longitude = 31.245579
             val zoomLevel = 15f
 
-
-            map.cameraPosition.target.longitude
-
             val homeLatLng = LatLng(latitude, longitude)
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
             map.addMarker(MarkerOptions().position(homeLatLng))
-
-            // this is default poi to saved if the user not select poi
-            _viewModel.selectedPOI.value =
-                PointOfInterest(
-                    LatLng(
-                        30.020496121327998, 31.52898609638214
-                    ), "ChIJAAAAAAAAAAAR_-B7dE4thhk", "Agora Mall"
-                )
 
             setMapStyle(map)
             setPoiClick(map)

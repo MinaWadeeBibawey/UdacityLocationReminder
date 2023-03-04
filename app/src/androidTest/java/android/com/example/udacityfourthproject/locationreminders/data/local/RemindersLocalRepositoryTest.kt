@@ -4,6 +4,7 @@ import android.com.example.udacityfourthproject.locationreminders.data.dto.Remin
 import android.com.example.udacityfourthproject.locationreminders.data.dto.succeeded
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import android.com.example.udacityfourthproject.locationreminders.data.dto.Result.Success
+import android.com.example.udacityfourthproject.locationreminders.data.dto.Result.Error
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -75,10 +76,17 @@ class RemindersLocalRepositoryTest {
     }
 
     @Test
+    fun getReminder_reminderNotFound() = runBlocking{
+        //WHEN - Reminder retrieve is returned
+       val result = localDataSource.getReminder("fsf3424asdj78871-jkdhasjk938nds-j3123")
+
+        //THEN - Reminder not found error
+        assertThat(result,`is`(Error("Reminder not found!")))
+    }
+
+    @Test
     fun deleteAllReminders() = runBlockingTest {
         database.reminderDao().deleteAllReminders()
     }
-
-//    TODO: Add testing implementation to the RemindersLocalRepository.kt
 
 }

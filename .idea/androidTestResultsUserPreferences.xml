@@ -217,6 +217,20 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="226164409">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="07457371AF102610" value="120" />
+                  <entry key="Duration" value="90" />
+                  <entry key="INFINIX MOBILITY LIMITED&#10; Infinix X662" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="695684280">
           <value>
             <AndroidTestResultsTableState>
@@ -296,6 +310,20 @@
                   <entry key="07457371AF102610" value="120" />
                   <entry key="Duration" value="90" />
                   <entry key="INFINIX MOBILITY LIMITED" value="120" />
+                  <entry key="INFINIX MOBILITY LIMITED&#10; Infinix X662" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1409240324">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="07457371AF102610" value="120" />
+                  <entry key="Duration" value="90" />
                   <entry key="INFINIX MOBILITY LIMITED&#10; Infinix X662" value="120" />
                   <entry key="Tests" value="360" />
                 </map>

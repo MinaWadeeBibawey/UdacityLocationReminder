@@ -1,11 +1,13 @@
 package android.com.example.udacityfourthproject
 
 import android.app.Application
+import android.com.example.udacityfourthproject.koin.repositoriesModule
 import android.com.example.udacityfourthproject.locationreminders.data.ReminderDataSource
 import android.com.example.udacityfourthproject.locationreminders.data.local.LocalDB
 import android.com.example.udacityfourthproject.locationreminders.data.local.RemindersLocalRepository
 import android.com.example.udacityfourthproject.locationreminders.reminderslist.RemindersListViewModel
 import android.com.example.udacityfourthproject.locationreminders.savereminder.SaveReminderViewModel
+import androidx.lifecycle.SavedStateHandle
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
@@ -23,25 +25,24 @@ class MyApp : Application() {
             //Declare a ViewModel - be later inject into Fragment with dedicated injector using by viewModel()
             viewModel {
                 RemindersListViewModel(
-                    get(),
-                    get() as ReminderDataSource
+                    get()
                 )
             }
             //Declare singleton definitions to be later injected using by inject()
             single {
                 //This view model is declared singleton to be used across multiple fragments
                 SaveReminderViewModel(
-                    get(),
-                    get() as ReminderDataSource
+                    get()
                 )
             }
-            single { RemindersLocalRepository(get()) as ReminderDataSource }
+           /* single { RemindersLocalRepository(get()) as ReminderDataSource }*/
+
             single { LocalDB.createRemindersDao(this@MyApp) }
         }
 
         startKoin {
             androidContext(this@MyApp)
-            modules(listOf(myModule))
+            modules(repositoriesModule ,myModule)
         }
     }
 }

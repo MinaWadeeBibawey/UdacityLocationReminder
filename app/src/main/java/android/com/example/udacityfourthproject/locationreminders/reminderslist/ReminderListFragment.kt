@@ -1,16 +1,29 @@
 package android.com.example.udacityfourthproject.locationreminders.reminderslist
 
 import android.com.example.udacityfourthproject.R
+import android.com.example.udacityfourthproject.authentication.AuthenticationActivity
 import android.com.example.udacityfourthproject.base.BaseFragment
 import android.com.example.udacityfourthproject.base.NavigationCommand
 import android.com.example.udacityfourthproject.databinding.FragmentRemindersBinding
+import android.com.example.udacityfourthproject.locationreminders.ReminderDescriptionActivity
+import android.com.example.udacityfourthproject.locationreminders.RemindersActivity
 import android.com.example.udacityfourthproject.utils.setDisplayHomeAsUpEnabled
 import android.com.example.udacityfourthproject.utils.setTitle
 import android.com.example.udacityfourthproject.utils.setup
+import android.com.example.udacityfourthproject.utils.startNewActivity
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.SavedStateHandle
+import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class ReminderListFragment : BaseFragment() {
     //use Koin to retrieve the ViewModel instance
@@ -43,6 +56,7 @@ class ReminderListFragment : BaseFragment() {
         binding.addReminderFAB.setOnClickListener {
             navigateToAddReminder()
         }
+
     }
 
     override fun onResume() {
@@ -62,6 +76,9 @@ class ReminderListFragment : BaseFragment() {
 
     private fun setupRecyclerView() {
         val adapter = RemindersListAdapter {
+            val intent = Intent(requireContext(),ReminderDescriptionActivity::class.java)
+            intent.putExtra("EXTRA_ReminderDataItem",it)
+            startActivity(intent)
         }
 
 //        setup the recycler view using the extension function
@@ -71,7 +88,10 @@ class ReminderListFragment : BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout -> {
-//                TODO: add the logout implementation
+                AuthUI.getInstance().signOut(requireContext())
+
+                val activity = AuthenticationActivity::class.java
+                requireActivity().startNewActivity(activity)
             }
         }
         return super.onOptionsItemSelected(item)

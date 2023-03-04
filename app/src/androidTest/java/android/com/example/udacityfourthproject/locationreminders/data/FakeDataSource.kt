@@ -1,4 +1,4 @@
-package android.com.example.udacityfourthproject.data
+package android.com.example.udacityfourthproject.locationreminders.data
 
 import android.com.example.udacityfourthproject.locationreminders.data.ReminderDataSource
 import android.com.example.udacityfourthproject.locationreminders.data.dto.ReminderDTO

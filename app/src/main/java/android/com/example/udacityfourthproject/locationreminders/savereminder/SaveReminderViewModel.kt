@@ -4,22 +4,23 @@ import android.app.Application
 import android.com.example.udacityfourthproject.R
 import android.com.example.udacityfourthproject.base.BaseViewModel
 import android.com.example.udacityfourthproject.base.NavigationCommand
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.PointOfInterest
 import android.com.example.udacityfourthproject.locationreminders.data.ReminderDataSource
 import android.com.example.udacityfourthproject.locationreminders.data.dto.ReminderDTO
 import android.com.example.udacityfourthproject.locationreminders.reminderslist.ReminderDataItem
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.PointOfInterest
 import kotlinx.coroutines.launch
 
-class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
-    BaseViewModel(app) {
+class SaveReminderViewModel(val dataSource: ReminderDataSource) :
+    BaseViewModel() {
     val reminderTitle = MutableLiveData<String>()
     val reminderDescription = MutableLiveData<String>()
     val reminderSelectedLocationStr = MutableLiveData<String>()
-    val selectedPOI = MutableLiveData<PointOfInterest>()
+    val selectedPOI = MutableLiveData<PointOfInterest?>()
     val latitude = MutableLiveData<Double>()
     val longitude = MutableLiveData<Double>()
+
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
@@ -59,7 +60,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
                 )
             )
             showLoading.value = false
-            showToast.value = app.getString(R.string.reminder_saved)
+            showToast.value = "Reminder Saved !"
             navigationCommand.value = NavigationCommand.Back
         }
     }

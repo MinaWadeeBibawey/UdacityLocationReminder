@@ -2,12 +2,15 @@ package android.com.example.udacityfourthproject.utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity
 import android.com.example.udacityfourthproject.base.BaseRecyclerViewAdapter
+import android.content.Intent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.activity_reminders.*
 
 
 /**
@@ -22,9 +25,16 @@ fun <T> RecyclerView.setup(
     }
 }
 
+fun <A : Activity> Activity.startNewActivity(activity: Class<A>) {
+    Intent(this, activity).also {
+        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(it)
+    }
+}
+
 fun Fragment.setTitle(title: String) {
     if (activity is AppCompatActivity) {
-        (activity as AppCompatActivity).supportActionBar?.title = title
+        (activity as AppCompatActivity).toolbar?.title = title
     }
 }
 

@@ -1,18 +1,22 @@
 package android.com.example.udacityfourthproject.locationreminders.reminderslist
 
 import android.app.Application
+import android.com.example.udacityfourthproject.R
 import android.com.example.udacityfourthproject.base.BaseViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import android.com.example.udacityfourthproject.locationreminders.data.ReminderDataSource
 import android.com.example.udacityfourthproject.locationreminders.data.dto.ReminderDTO
 import android.com.example.udacityfourthproject.locationreminders.data.dto.Result
+import android.com.example.udacityfourthproject.utils.Event
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 class RemindersListViewModel(
-    app: Application,
     private val dataSource: ReminderDataSource
-) : BaseViewModel(app) {
+) : BaseViewModel() {
     // list that holds the reminder data to be displayed on the UI
     val remindersList = MutableLiveData<List<ReminderDataItem>>()
 

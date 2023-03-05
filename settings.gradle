@@ -1,3 +1,9 @@
-
-rootProject.name = "UdacityFourthProject"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Location Reminder"
 include ':app'

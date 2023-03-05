@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace 'android.com.example.udacityfourthproject'
+    namespace 'com.udacity.project4'
     compileSdk 33
 
     defaultConfig {
-        applicationId "android.com.example.udacityfourthproject"
+        applicationId "com.udacity.project4"
         minSdk 21
         targetSdk 33
         versionCode 1

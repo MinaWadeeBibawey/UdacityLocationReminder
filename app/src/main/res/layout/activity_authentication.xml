@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="android.com.example.udacityfourthproject.authentication.LoginViewModel" />
+            type="com.udacity.project4.authentication.LoginViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

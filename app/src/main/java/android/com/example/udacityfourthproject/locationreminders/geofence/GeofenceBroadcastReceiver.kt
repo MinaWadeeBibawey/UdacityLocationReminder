@@ -28,13 +28,13 @@ import kotlin.coroutines.CoroutineContext
 
 private const val TAG = "GeofenceReceiver"
 
-class GeofenceBroadcastReceiver() : BroadcastReceiver(), CoroutineScope {
+class GeofenceBroadcastReceiver : BroadcastReceiver(), CoroutineScope {
 
     private var coroutineJob: Job = Job()
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + coroutineJob
 
-    val repo : ReminderDataSource by inject(ReminderDataSource::class.java)
+    private val repo : ReminderDataSource by inject(ReminderDataSource::class.java)
 
     override fun onReceive(context: Context, intent: Intent) {
 

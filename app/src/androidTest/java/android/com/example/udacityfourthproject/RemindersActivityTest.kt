@@ -2,32 +2,40 @@ package android.com.example.udacityfourthproject
 
 import android.app.Activity
 import android.app.Application
-import android.com.example.udacityfourthproject.locationreminders.ReminderDescriptionActivity
 import android.com.example.udacityfourthproject.locationreminders.RemindersActivity
 import android.com.example.udacityfourthproject.locationreminders.data.ReminderDataSource
-import android.com.example.udacityfourthproject.locationreminders.data.dto.ReminderDTO
 import android.com.example.udacityfourthproject.locationreminders.data.local.LocalDB
 import android.com.example.udacityfourthproject.locationreminders.data.local.RemindersLocalRepository
+import android.com.example.udacityfourthproject.locationreminders.reminderslist.ReminderListFragmentDirections
 import android.com.example.udacityfourthproject.locationreminders.reminderslist.RemindersListViewModel
+import android.com.example.udacityfourthproject.locationreminders.savereminder.SaveReminderFragment
+import android.com.example.udacityfourthproject.locationreminders.savereminder.SaveReminderFragmentDirections
 import android.com.example.udacityfourthproject.locationreminders.savereminder.SaveReminderViewModel
 import android.com.example.udacityfourthproject.util.DataBindingIdlingResource
 import android.com.example.udacityfourthproject.util.monitorActivity
 import android.com.example.udacityfourthproject.utils.EspressoIdlingResource
+import android.os.Bundle
+import android.view.View
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.testing.launchFragmentInContainer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withContentDescription
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.assertion.ViewAssertions
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
-import androidx.test.uiautomator.UiDevice
-import androidx.test.uiautomator.UiSelector
+import com.google.android.material.internal.ContextUtils.getActivity
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.CoreMatchers.not
+import org.hamcrest.core.AllOf.allOf
+import org.hamcrest.core.Is.`is`
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -38,6 +46,9 @@ import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.get
+import org.koin.test.mock.MockProvider.register
+import org.mockito.Mockito
+
 
 @RunWith(AndroidJUnit4::class)
 @LargeTest
@@ -47,6 +58,7 @@ class RemindersActivityTest :
 
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
+    private lateinit var saveReminderViewModel: SaveReminderViewModel
 
     private val dataBindingIdlingResource = DataBindingIdlingResource()
 
@@ -88,6 +100,7 @@ class RemindersActivityTest :
         }
         //Get our real repository
         repository = get()
+        saveReminderViewModel = get()
         //
         runBlocking {
             repository.deleteAllReminders()
@@ -122,26 +135,66 @@ class RemindersActivityTest :
         Espresso.onView(withId(R.id.reminderTitle))
             .perform(ViewActions.typeText("TITLE1"), ViewActions.closeSoftKeyboard())
         Espresso.onView(withId(R.id.reminderDescription))
+            .perform(ViewActions.typeText("DESCRIPTION"), ViewActions.closeSoftKeyboard())
+        Espresso.onView(withId(R.id.saveReminder)).perform(ViewActions.click())
+
+        Espresso.onView(withText(R.string.err_select_location)).check(matches(isDisplayed()))
+
+        activityScenario.close()
+    }
+
+    @Test
+    fun addNewReminder_saveReminder() {
+        // GIVEN - on the home screen
+        val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        dataBindingIdlingResource.monitorActivity(activityScenario)
+
+        // WHEN - Click on the first list item
+        Espresso.onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
+        Espresso.onView(withId(R.id.reminderTitle))
+            .perform(ViewActions.typeText("TITLE1"), ViewActions.closeSoftKeyboard())
+        Espresso.onView(withId(R.id.reminderDescription))
             .perform(ViewActions.typeText("DESCRIPTION"))
         Espresso.onView(withId(R.id.selectLocation)).perform(ViewActions.click())
         Espresso.onView(withId(R.id.save_location_button)).perform(ViewActions.click())
         Espresso.onView(withId(R.id.saveReminder)).perform(ViewActions.click())
 
+        //check if the reminder added successfully
+        Espresso.onView(withText("TITLE1")).check(matches(isDisplayed()))
+
+        // close ActivityScenario
         activityScenario.close()
     }
 
 
     @Test
-    fun reminderDetailScreen_doubleUpButton() = runBlocking {
-        val reminder = FakeReminders.getRemindersDto()
-        repository.saveReminder(reminder)
-
+    fun addReminder_detailScreen_checkOnReminderData_backToRemindersList() = runBlocking {
         // Start the Tasks screen.
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
         dataBindingIdlingResource.monitorActivity(activityScenario)
 
+        // WHEN - Click on the first list item
+        Espresso.onView(withId(R.id.addReminderFAB)).perform(ViewActions.click())
+        Espresso.onView(withId(R.id.reminderTitle))
+            .perform(ViewActions.typeText("TITLE1"), ViewActions.closeSoftKeyboard())
+        Espresso.onView(withId(R.id.reminderDescription))
+            .perform(ViewActions.typeText("DESCRIPTION"))
+        Espresso.onView(withId(R.id.selectLocation)).perform(ViewActions.click())
+        Espresso.onView(withId(R.id.save_location_button)).perform(ViewActions.click())
+        Espresso.onView(withId(R.id.saveReminder)).perform(ViewActions.click())
+
+        //check if the reminder added successfully
+        Espresso.onView(withText("TITLE1")).check(matches(isDisplayed()))
+
         // 1. Click on the reminder on the list.
-        Espresso.onView(ViewMatchers.withText("Fake_Reminder")).perform(ViewActions.click())
+        Espresso.onView(withText("TITLE1")).perform(ViewActions.click())
+
+        Espresso.onView(withId(R.id.reminderTitle)).check(matches(isDisplayed()))
+        Espresso.onView(withId(R.id.reminderTitle)).check(matches(withText("TITLE1")))
+        Espresso.onView(withId(R.id.reminderDescription)).check(matches(isDisplayed()))
+        Espresso.onView(withId(R.id.reminderDescription)).check(matches(withText("DESCRIPTION")))
+        Espresso.onView(withId(R.id.saveSelectedLocation)).check(matches(isDisplayed()))
+        Espresso.onView(withId(R.id.saveSelectedLocation)).check(matches(withText("Dropped Pin")))
 
         //system back press
         Espresso.pressBack()

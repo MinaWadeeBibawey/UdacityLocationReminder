@@ -22,6 +22,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import org.koin.android.ext.android.inject
+import java.util.*
 
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
@@ -70,9 +71,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun onLocationSelected() {
+
+        if (_viewModel.selectedPOI.value != null){
         _viewModel.reminderSelectedLocationStr.value = _viewModel.selectedPOI.value?.name
         _viewModel.latitude.value = _viewModel.selectedPOI.value?.latLng?.latitude
         _viewModel.longitude.value = _viewModel.selectedPOI.value?.latLng?.longitude
+        }
 
         findNavController().popBackStack()
     }
@@ -113,6 +117,27 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         }
     }
 
+    private fun setMapLongClick(map: GoogleMap) {
+        map.setOnMapLongClickListener { latLng ->
+            val snippet = String.format(
+                Locale.getDefault(),
+                "Lat: %1$.5f, Long: %2$.5f",
+                latLng.latitude,
+                latLng.longitude
+            )
+            map.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+                    .title(getString(R.string.dropped_pin))
+                    .snippet(snippet)
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)))
+
+            _viewModel.reminderSelectedLocationStr.value = getString(R.string.dropped_pin)
+            _viewModel.latitude.value = latLng.latitude
+            _viewModel.longitude.value = latLng.longitude
+        }
+    }
+
     private fun setMapStyle(map: GoogleMap) {
         try {
             // Customize the styling of the base map using a JSON object defined
@@ -150,8 +175,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(homeLatLng, zoomLevel))
             map.addMarker(MarkerOptions().position(homeLatLng))
 
+            _viewModel.reminderSelectedLocationStr.value = getString(R.string.dropped_pin)
+            _viewModel.latitude.value = latitude
+            _viewModel.longitude.value = longitude
+
             setMapStyle(map)
             setPoiClick(map)
+            setMapLongClick(map)
 
             map.isMyLocationEnabled = true
 

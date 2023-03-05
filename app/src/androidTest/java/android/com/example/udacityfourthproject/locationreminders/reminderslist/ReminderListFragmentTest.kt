@@ -7,7 +7,6 @@ import android.com.example.udacityfourthproject.getOrAwaitValue
 import android.com.example.udacityfourthproject.locationreminders.RemindersActivity
 import android.com.example.udacityfourthproject.locationreminders.data.FakeDataSource
 import android.com.example.udacityfourthproject.locationreminders.data.ReminderDataSource
-import android.com.example.udacityfourthproject.locationreminders.data.dto.ReminderDTO
 import android.com.example.udacityfourthproject.locationreminders.savereminder.SaveReminderViewModel
 import android.com.example.udacityfourthproject.util.DataBindingIdlingResource
 import android.com.example.udacityfourthproject.util.monitorActivity

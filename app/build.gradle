@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace 'android.com.example.udacityfourthproject'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "android.com.example.udacityfourthproject"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

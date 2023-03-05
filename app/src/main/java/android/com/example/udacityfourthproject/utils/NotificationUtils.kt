@@ -1,17 +1,23 @@
 package android.com.example.udacityfourthproject.utils
 
+import android.Manifest
+import android.Manifest.permission.POST_NOTIFICATIONS
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.com.example.udacityfourthproject.BuildConfig
 import android.com.example.udacityfourthproject.R
 import android.com.example.udacityfourthproject.locationreminders.ReminderDescriptionActivity
 import android.com.example.udacityfourthproject.locationreminders.reminderslist.ReminderDataItem
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
+import androidx.core.content.ContextCompat
 
-private const val NOTIFICATION_CHANNEL_ID = "android.com.example.udacityfourthproject" + ".channel"
+private const val NOTIFICATION_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel"
 
 fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
     val notificationManager = context
@@ -19,6 +25,7 @@ fun sendNotification(context: Context, reminderDataItem: ReminderDataItem) {
 
     // We need to create a NotificationChannel associated with our CHANNEL_ID before sending a notification.
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+        && ContextCompat.checkSelfPermission(context, POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
         && notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null
     ) {
         val name = context.getString(R.string.app_name)
